@@ -1,2 +1,2 @@
 # Practice
-백준 등등
+백준, Sofrware Expert Academy 문제 풀이
