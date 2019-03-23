@@ -32,7 +32,7 @@ void bfs() {
 			}
 		}
 
-		int hq_size = hedge_q.size();
+		int hq_size = hedge_q.size(); 
 		moveCnt++;
 
 		while (hq_size--) {
