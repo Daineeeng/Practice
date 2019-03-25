@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <queue>
 
 using namespace std;
 
@@ -12,15 +13,17 @@ int inputGraph[10][10];
 int energyGraph[10][10];
 
 struct tree {
-	int age; //죽으면 -1
+	int x;
+	int y;
+	int z; //죽으면 -1
 };
 vector<tree> v;
 vector<tree> dead;
 vector<tree> mom;
-vector<tree> treeMap[10][10];
+queue<tree> q;
 
 bool aging(tree t1, tree t2) {
-	return t1.age < t2.age;
+	return t1.z < t2.z;
 }
 
 void simulation() {
@@ -28,15 +31,15 @@ void simulation() {
 	while (K--) {
 		// spring :  나무가 자신의 나이만큼 자신이 있는 칸의 양분을 먹고, 나이가 1 증가한다. 한 칸에 여러 나무가 있다면, 나이가 어린 나무부터 양분을 먹는다.
 		int v_size = v.size();
-		while (v_size--) {
-			int cx = v.front().x;
-			int cy = v.front().y;
-			int age = v.front().z;
-			v.erase(v.begin());
+
+		for (int i = 0; i<v.size(); i++) {
+			int cx = v[i].x;
+			int cy = v[i].y;
+			int age = v[i].z;
 
 			if (energyGraph[cx][cy] >= age) { // 양분 충분
 				energyGraph[cx][cy] -= age;
-				v.push_back({ cx,cy,age + 1 });
+				q.push({ cx,cy,age + 1 });
 
 				if ((age + 1) % 5 == 0) {
 					mom.push_back({ cx,cy,age + 1 });
@@ -53,30 +56,36 @@ void simulation() {
 			}
 		}
 
+		v.clear();
+		while (!q.empty()) {
+			v.push_back(q.front());
+			q.pop();
+		}
+
 		// summer : 봄에 죽은 나무가 양분으로 변하게 된다.
-		while (!dead.empty()) {
-			int cx = dead.front().x;
-			int cy = dead.front().y;
-			int age = dead.front().z;
+		for (int i = 0; i<dead.size(); i++) {
+			int cx = dead[i].x;
+			int cy = dead[i].y;
+			int age = dead[i].z;
 
 			// 나이를 2로 나눈 값이 나무가 있던 칸에 양분으로 추가된다. 소수점 아래는 버린다.
 			int energy = age / 2;
 			energyGraph[cx][cy] += energy;
-			dead.erase(dead.begin());			
 		}
+		dead.clear();
 
 		// fall : 나이가 5의 배수인 나무가 인접한 8개의 칸에 나이가 1인 나무를 만든다. 땅을 벗어나는 칸에는 생기지 않는다.
-		while (!mom.empty()) {
-			int cx = mom.front().x;
-			int cy = mom.front().y;
+		for (int i = 0; i<mom.size(); i++) {
+			int cx = mom[i].x;
+			int cy = mom[i].y;
 			for (int k = 0; k < 8; k++) {
 				int nx = cx + dx[k];
 				int ny = cy + dy[k];
 				if (nx < 0 || N <= nx || ny < 0 || N <= ny) continue;
-				v.insert(v.begin(), { nx,ny,1 }); // 1살 나무는 앞에 넣기
+				v.push_back({ nx, ny, 1 });
 			}
-			mom.erase(mom.begin());
 		}
+		mom.clear();
 
 		// winter : 겨울에는 땅에 양분을 추가한다. 각 칸에 추가되는 양분의 양은 A[r][c]이고, 입력으로 주어진다
 		for (int i = 0; i < N; i++) {
@@ -84,6 +93,7 @@ void simulation() {
 				energyGraph[i][j] += inputGraph[i][j];
 			}
 		}
+		sort(v.begin(), v.end(), aging);
 	}
 }
 
@@ -94,7 +104,7 @@ int getAns() {
 
 int main() {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-	freopen("input.txt", "r", stdin);
+	//freopen("input.txt", "r", stdin);
 
 	cin >> N >> M >> K;
 	for (int i = 0; i < N; i++) {
@@ -106,15 +116,10 @@ int main() {
 
 	for (int i = 0; i < M; i++) {
 		cin >> x >> y >> z;
-		treeMap[x - 1][y - 1].push_back({ z });
+		v.push_back({ x - 1,y - 1,z });
 	}
 	// 나무 나이 순 정렬
-
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++) {
-			sort(treeMap[i][j].begin(), treeMap[i][j].end(), aging);
-		}
-	}
+	sort(v.begin(), v.end(), aging);
 
 	simulation();
 
