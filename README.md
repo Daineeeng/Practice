@@ -1,5 +1,5 @@
 # Practice
-백준, Sofrware Expert Academy 문제 풀이
+BOJ, Sofrware Expert Academy, Programmers
 --------------------------------------- 
 updating...
 ---------------------------------------
