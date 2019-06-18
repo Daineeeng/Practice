@@ -30,6 +30,5 @@ int main(int argc, char** argv)
 		}
 		cout << "Case #" << tc << '\n' << Answer << '\n';
 	}
-
 	return 0;
 }
