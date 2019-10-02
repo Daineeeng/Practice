@@ -1,0 +1,23 @@
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+#define MAXN 1000000
+bool check[MAXN+1];
+
+int solution(int n) {
+    ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+    check[0] = check[1] = true;
+    for(int i=2; i*i<=MAXN; i++) {
+        if(!check[i]) {
+            for(int j=i+i; j<=MAXN; j+=i) {
+                check[j] = true;
+            }
+        }
+    }
+    int answer = 0;
+    for(int i=1; i<=n; i++) {
+        if(!check[i]) answer++;
+    }
+    return answer;
+}
