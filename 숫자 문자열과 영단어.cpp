@@ -15,7 +15,7 @@ int solution(string s) {
             } else if(s[i] =='o') {
                 answer += '1';
                 i += 2;
-            } else if(s[i] =='t') {
+            } else if(s[i] == 't') {
                 if(s.substr(i, 3) == "two") {
                     answer += '2';
                     i += 2;
@@ -23,7 +23,7 @@ int solution(string s) {
                     answer += '3';
                     i += 4;
                 }
-            } else if(s[i] =='f') {
+            } else if(s[i] == 'f') {
                 if(s.substr(i,4) == "four") {
                     answer += '4';
                 } else {
@@ -38,10 +38,10 @@ int solution(string s) {
                     answer += '7';
                     i += 4;
                 }
-            } else if(s[i] =='e') {
+            } else if(s[i] == 'e') {
                 answer += '8';
                 i += 4;
-            } else if(s[i] =='n') {
+            } else if(s[i] == 'n') {
                 answer += '9';
                 i += 3;
             }            
