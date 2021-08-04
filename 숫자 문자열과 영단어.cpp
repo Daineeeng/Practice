@@ -13,7 +13,7 @@ int solution(string s) {
                 answer += '0';
                 i += 3;
             } else if(s[i] =='o') {
-                answer+= '1';
+                answer += '1';
                 i += 2;
             } else if(s[i] =='t') {
                 if(s.substr(i, 3) == "two") {
